@@ -1,6 +1,8 @@
 # Using the IBM Dataset to predict churn. 
 
-##We will be folloing Susan Li's epic tutorial. I have added a few bit out of necessity but have tried to stay as close Susan's code as possible. The next steps I would like carry out are:
+## We will be following Susan Li's epic tutorial. Big shout out to Susan
+
+I have added a few bits out of necessity but have tried to stay as close Susan's code as possible. The next steps I would like carry out are:
 1. The use of the Random Forest Model as a pickle file so it can be packaged in Flask and called as an api
 2. Drawing up HR initiatives to target these drivers of attrition. We have 10 and the most important appear to be:
 
