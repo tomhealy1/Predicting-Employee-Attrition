@@ -45,16 +45,16 @@ print(hr.isnull().any())
 #Lets check the shape
 print(hr.shape)
 
-#We have a lot of dimensionality due to many departments, we need to reduce this by combining the department that can be combined
+#We have a lot of dimensionality due to many departments, we need to reduce this by combining the departments that can be combined
 print(hr['department'].unique())
 
-#We are going to combine tech, IT and supoort in to one called technical
+#We are going to combine tech, IT and support in to one called technical
 
 hr['department']=np.where(hr['department'] == 'support', 'technical', hr['department'])
 
 hr['department']=np.where(hr['department'] == 'IT', 'technical', hr['department'])
 
-#We have our new super department :-)
+#We have our new super department :-) Lets see what are our new unique departments
 print(hr['department'].unique())
 
 #Data Exploration 
@@ -110,6 +110,8 @@ hr_vars=hr.columns.values.tolist()
 y=['left']
 X=[i for i in hr_vars if i not in y]
 
+print(X)
+
 #Time for Models - we are using Recursive Feature Elimination to do the hard work of feature selection n = 10
 model = LogisticRegression()
 rfe = RFE(model, 10)
@@ -138,16 +140,18 @@ rf.fit(X_train, y_train)
 print('Random Forest Accuracy: {:.3f}'.format(accuracy_score(y_test, rf.predict(X_test))))
 
 
-
+#Here we are using the K Fold cross validation resampling method to check the skill of the model on unseen data (How well does it generalize on unseen data) 
 kfold = model_selection.KFold(n_splits=10, random_state=7)
 modelCV = RandomForestClassifier()
 scoring = 'accuracy'
 results = model_selection.cross_val_score(modelCV, X_train, y_train, cv=kfold, scoring=scoring)
 print("10-fold cross validation average accuracy: %.3f" % (results.mean()))
 
-
+#We print the result
 print(classification_report(y_test, rf.predict(X_test)))
 
+#Next we want a confusion matrix to be created to better understand the Recall and Precision of our models (Recall - when a person leaves does the model predict that)
+#(Precision - When we predict someone will leave how often does that occur)
 
 y_pred = rf.predict(X_test)
 forest_cm = metrics.confusion_matrix(y_pred, y_test, [1,0])
@@ -158,6 +162,7 @@ plt.title('Random Forest')
 plt.savefig('random_forest')
 plt.show()
 
+
 logit_roc_auc = roc_auc_score(y_test, logreg.predict(X_test))
 fpr, tpr, thresholds = roc_curve(y_test, logreg.predict_proba(X_test)[:,1])
 
@@ -165,7 +170,7 @@ rf_roc_auc = roc_auc_score(y_test, rf.predict(X_test))
 rf_fpr, rf_tpr, rf_thresholds = roc_curve(y_test, rf.predict_proba(X_test)[:,1])
 
 plt.figure()
-plt.plot(fpr, tpr, label='Logistic Regression (area = %0.2f)' % logit_roc_auc)
+#plt.plot(fpr, tpr, label='Logistic Regression (area = %0.2f)' % logit_roc_auc)
 plt.plot(rf_fpr, rf_tpr, label='Random Forest (area = %0.2f)' % rf_roc_auc)
 plt.plot([0, 1], [0, 1],'r--')
 plt.xlim([0.0, 1.0])
