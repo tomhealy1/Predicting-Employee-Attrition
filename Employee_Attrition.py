@@ -20,6 +20,7 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
+from sklearn.externals import joblib
 
 
 #Next we will pass the csv file to variable hr
@@ -139,6 +140,10 @@ rf.fit(X_train, y_train)
 
 print('Random Forest Accuracy: {:.3f}'.format(accuracy_score(y_test, rf.predict(X_test))))
 
+
+joblib.dump(rf, "rf.pkl")
+
+['rf.pkl']
 
 #Here we are using the K Fold cross validation resampling method to check the skill of the model on unseen data (How well does it generalize on unseen data) 
 kfold = model_selection.KFold(n_splits=10, random_state=7)
